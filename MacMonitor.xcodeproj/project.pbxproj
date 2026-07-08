@@ -25,6 +25,7 @@
 		A1000037229E8F1100000001 /* ThrottleReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000036229E8F1100000001 /* ThrottleReader.swift */; };
 		A1000039229E8F1100000001 /* SensorsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000038229E8F1100000001 /* SensorsView.swift */; };
 		A100003B229E8F1100000001 /* StorageReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100003A229E8F1100000001 /* StorageReader.swift */; };
+		A100003D229E8F1100000001 /* FanController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100003C229E8F1100000001 /* FanController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,6 +50,7 @@
 		A1000036229E8F1100000001 /* ThrottleReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThrottleReader.swift; sourceTree = "<group>"; };
 		A1000038229E8F1100000001 /* SensorsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorsView.swift; sourceTree = "<group>"; };
 		A100003A229E8F1100000001 /* StorageReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageReader.swift; sourceTree = "<group>"; };
+		A100003C229E8F1100000001 /* FanController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FanController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +127,7 @@
 				A1000032229E8F1100000001 /* MemoryReader.swift */,
 				A1000036229E8F1100000001 /* ThrottleReader.swift */,
 				A100003A229E8F1100000001 /* StorageReader.swift */,
+				A100003C229E8F1100000001 /* FanController.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -215,6 +218,7 @@
 				A1000037229E8F1100000001 /* ThrottleReader.swift in Sources */,
 				A1000039229E8F1100000001 /* SensorsView.swift in Sources */,
 				A100003B229E8F1100000001 /* StorageReader.swift in Sources */,
+				A100003D229E8F1100000001 /* FanController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -361,7 +365,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.macmonitor.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -389,7 +393,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.macmonitor.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

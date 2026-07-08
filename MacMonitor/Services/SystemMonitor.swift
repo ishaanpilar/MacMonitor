@@ -14,6 +14,7 @@ final class SystemMonitor {
     private(set) var temperatureSource: String?     // SMC key, "Average", or "HID"
     private(set) var fanSpeed: Double?              // Percentage 0-100%
     private(set) var hasFans: Bool = false
+    let hasFanControl: Bool = FanController.shared.isSupported
     private(set) var sensors: [String: Double] = [:]  // every discovered sensor, key -> °C
 
     // MARK: - CPU, Memory & Storage State
@@ -49,6 +50,17 @@ final class SystemMonitor {
     // Graphs
     var showFanSpeed: Bool = UserDefaults.standard.object(forKey: "showFanSpeed") as? Bool ?? true {
         didSet { UserDefaults.standard.set(showFanSpeed, forKey: "showFanSpeed") }
+    }
+
+    // Fan control
+    var fanControlEnabled: Bool = UserDefaults.standard.object(forKey: "fanControlEnabled") as? Bool ?? false {
+        didSet { UserDefaults.standard.set(fanControlEnabled, forKey: "fanControlEnabled") }
+    }
+    var fanTargetPercentage: Double = {
+        let stored = UserDefaults.standard.double(forKey: "fanTargetPercentage")
+        return stored > 0 ? stored : 70
+    }() {
+        didSet { UserDefaults.standard.set(fanTargetPercentage, forKey: "fanTargetPercentage") }
     }
     var showCPUGraph: Bool = UserDefaults.standard.object(forKey: "showCPUGraph") as? Bool ?? true {
         didSet { UserDefaults.standard.set(showCPUGraph, forKey: "showCPUGraph") }
@@ -199,6 +211,12 @@ final class SystemMonitor {
         let allSensors = SMCReader.shared.readAllSensors()
         sensors = allSensors
         updateTemperature(from: allSensors)
+
+        FanController.shared.tick(
+            enabled: fanControlEnabled,
+            targetPercentage: fanTargetPercentage,
+            hottestSensor: allSensors.values.max()
+        )
 
         // Fan speed
         if let fan = SMCReader.shared.readFanSpeed() {

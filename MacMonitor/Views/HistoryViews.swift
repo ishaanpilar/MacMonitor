@@ -130,14 +130,14 @@ struct HistoryGraphView: View {
 
                 if entry.pressure != currentPressure {
                     let rect = CGRect(x: segmentStart, y: 0, width: x - segmentStart, height: size.height)
-                    context.fill(Path(rect), with: .color(currentPressure.color.opacity(0.3)))
+                    context.fill(Path(rect), with: .color(currentPressure.color.opacity(0.18)))
                     currentPressure = entry.pressure
                     segmentStart = x
                 }
             }
             // Draw final segment to end
             let finalRect = CGRect(x: segmentStart, y: 0, width: size.width - segmentStart, height: size.height)
-            context.fill(Path(finalRect), with: .color(currentPressure.color.opacity(0.3)))
+            context.fill(Path(finalRect), with: .color(currentPressure.color.opacity(0.18)))
 
             // Draw temperature line
             var tempPath = Path()
@@ -254,10 +254,10 @@ struct HistoryGraphView: View {
                 }
             }
         }
-        .frame(height: 70)
+        .frame(height: 60)
         .drawingGroup()
-        .clipShape(RoundedRectangle(cornerRadius: 6))
-        .overlay(RoundedRectangle(cornerRadius: 6).stroke(.secondary.opacity(0.3), lineWidth: 1))
+        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous).stroke(.secondary.opacity(0.12), lineWidth: 1))
         .onContinuousHover { phase in
             switch phase {
             case .active(let location):

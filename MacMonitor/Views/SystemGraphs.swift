@@ -1,8 +1,37 @@
 import SwiftUI
 
+// MARK: - Palette
+
+/// Harmonized, dark-mode-tuned accent colours and card styling for the popover.
+enum Palette {
+    static let thermal = Color(red: 0.33, green: 0.80, blue: 0.52)
+    static let cpu     = Color(red: 0.36, green: 0.62, blue: 0.98)
+    static let memory  = Color(red: 0.66, green: 0.49, blue: 0.97)
+    static let storage = Color(red: 0.98, green: 0.70, blue: 0.32)
+
+    static let cardFill = Color.primary.opacity(0.05)
+    static let cardStroke = Color.primary.opacity(0.07)
+    static let track = Color.primary.opacity(0.10)
+}
+
+extension View {
+    /// Wraps content in the popover's standard rounded card.
+    func cardStyle() -> some View {
+        self
+            .padding(10)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                RoundedRectangle(cornerRadius: 10, style: .continuous).fill(Palette.cardFill)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 10, style: .continuous).stroke(Palette.cardStroke, lineWidth: 1)
+            )
+    }
+}
+
 // MARK: - Menu-bar tick
 
-/// A small checkbox that toggles whether a metric is shown in the menu bar.
+/// A subtle toggle controlling whether a metric is shown in the menu bar.
 struct MenuBarToggle: View {
     @Binding var isOn: Bool
 
@@ -10,60 +39,82 @@ struct MenuBarToggle: View {
         Button {
             isOn.toggle()
         } label: {
-            Image(systemName: isOn ? "checkmark.square.fill" : "square")
-                .foregroundStyle(isOn ? Color.accentColor : .secondary)
+            Image(systemName: isOn ? "checkmark.circle.fill" : "circle")
+                .font(.system(size: 13))
+                .foregroundStyle(isOn ? Color.accentColor : Color.secondary.opacity(0.45))
         }
         .buttonStyle(.plain)
-        .help("Show in menu bar")
+        .help(isOn ? "Showing in menu bar — click to hide" : "Show in menu bar")
     }
 }
 
-// MARK: - Usage bar indicator
+// MARK: - Progress bar
 
-/// A compact labelled progress bar (0...1) used for CPU and Memory readouts.
-struct UsageBar: View {
-    let label: String
-    let fraction: Double          // 0...1
-    let valueText: String
-    let color: Color
-    var badge: (text: String, color: Color)?
-    var menuBarToggle: Binding<Bool>?
+/// A thin rounded progress bar (0...1) with a soft accent gradient.
+struct MetricProgressBar: View {
+    let fraction: Double
+    let accent: Color
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 3) {
+        GeometryReader { geo in
+            ZStack(alignment: .leading) {
+                Capsule().fill(Palette.track)
+                Capsule()
+                    .fill(LinearGradient(
+                        colors: [accent.opacity(0.8), accent],
+                        startPoint: .leading, endPoint: .trailing
+                    ))
+                    .frame(width: max(0, min(1, fraction)) * geo.size.width)
+            }
+        }
+        .frame(height: 6)
+    }
+}
+
+// MARK: - Metric card
+
+/// A grouped rounded card: icon + title (+ optional badge) + value + menu-bar tick, then content.
+struct MetricCard<Content: View>: View {
+    let icon: String
+    let title: String
+    let accent: Color
+    let valueText: String
+    var valueColor: Color?
+    var badge: (text: String, color: Color)?
+    var menuBar: Binding<Bool>?
+    @ViewBuilder var content: () -> Content
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 6) {
-                Text(label)
+                Image(systemName: icon)
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(accent)
+                    .frame(width: 16)
+                Text(title)
                     .fontWeight(.semibold)
                 if let badge {
                     Text(badge.text)
                         .font(.system(size: 9, weight: .semibold))
-                        .padding(.horizontal, 5)
-                        .padding(.vertical, 1)
-                        .background(badge.color.opacity(0.2), in: Capsule())
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 1.5)
+                        .background(badge.color.opacity(0.18), in: Capsule())
                         .foregroundStyle(badge.color)
                 }
                 Spacer()
                 Text(valueText)
-                    .foregroundStyle(color)
                     .fontWeight(.semibold)
                     .monospacedDigit()
-                if let menuBarToggle {
-                    MenuBarToggle(isOn: menuBarToggle)
+                    .foregroundStyle(valueColor ?? accent)
+                if let menuBar {
+                    MenuBarToggle(isOn: menuBar)
                 }
             }
             .font(.subheadline)
 
-            GeometryReader { geo in
-                ZStack(alignment: .leading) {
-                    Capsule()
-                        .fill(.secondary.opacity(0.2))
-                    Capsule()
-                        .fill(color)
-                        .frame(width: max(0, min(1, fraction)) * geo.size.width)
-                }
-            }
-            .frame(height: 5)
+            content()
         }
+        .cardStyle()
     }
 }
 
@@ -122,7 +173,7 @@ struct MetricLineGraph: View {
                     if color?.description != currentColor?.description {
                         if let c = currentColor {
                             let rect = CGRect(x: segmentStart, y: 0, width: x(entry) - segmentStart, height: size.height)
-                            context.fill(Path(rect), with: .color(c.opacity(0.18)))
+                            context.fill(Path(rect), with: .color(c.opacity(0.16)))
                         }
                         currentColor = color
                         segmentStart = x(entry)
@@ -130,7 +181,7 @@ struct MetricLineGraph: View {
                 }
                 if let c = currentColor {
                     let rect = CGRect(x: segmentStart, y: 0, width: size.width - segmentStart, height: size.height)
-                    context.fill(Path(rect), with: .color(c.opacity(0.18)))
+                    context.fill(Path(rect), with: .color(c.opacity(0.16)))
                 }
             }
 
@@ -162,7 +213,7 @@ struct MetricLineGraph: View {
             context.fill(
                 fill,
                 with: .linearGradient(
-                    Gradient(colors: [lineColor.opacity(0.35), lineColor.opacity(0.02)]),
+                    Gradient(colors: [lineColor.opacity(0.32), lineColor.opacity(0.02)]),
                     startPoint: CGPoint(x: 0, y: 0),
                     endPoint: CGPoint(x: 0, y: size.height)
                 )
@@ -184,9 +235,9 @@ struct MetricLineGraph: View {
             context.draw(Text(bottomLabel).font(labelStyle).foregroundColor(labelColor),
                          at: CGPoint(x: 4, y: size.height - 4), anchor: .bottomLeading)
         }
-        .frame(height: 54)
+        .frame(height: 48)
         .drawingGroup()
-        .clipShape(RoundedRectangle(cornerRadius: 6))
-        .overlay(RoundedRectangle(cornerRadius: 6).stroke(.secondary.opacity(0.3), lineWidth: 1))
+        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous).stroke(.secondary.opacity(0.12), lineWidth: 1))
     }
 }
