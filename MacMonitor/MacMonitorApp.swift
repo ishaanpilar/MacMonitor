@@ -8,14 +8,7 @@ struct MacMonitorApp: App {
         MenuBarExtra {
             MenuContentView(monitor: monitor)
         } label: {
-            MenuBarIcon(
-                pressure: monitor.pressure,
-                temperature: monitor.temperature,
-                showTemperature: monitor.showTemperatureInMenuBar,
-                fahrenheit: monitor.useFahrenheit,
-                cpuUsage: monitor.cpuUsage?.total,
-                showCPU: monitor.showCPUInMenuBar
-            )
+            MenuBarIcon(monitor: monitor)
         }
         .menuBarExtraStyle(.window)
 

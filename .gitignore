@@ -11,3 +11,7 @@ release/
 # macOS
 .DS_Store
 
+
+# Release packaging
+dist/
+.build-release/

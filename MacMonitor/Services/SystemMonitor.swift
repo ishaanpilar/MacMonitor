@@ -16,9 +16,10 @@ final class SystemMonitor {
     private(set) var hasFans: Bool = false
     private(set) var sensors: [String: Double] = [:]  // every discovered sensor, key -> °C
 
-    // MARK: - CPU & Memory State
+    // MARK: - CPU, Memory & Storage State
     private(set) var cpuUsage: CPUUsage?
     private(set) var memory: MemoryStats?
+    private(set) var storage: StorageStats?
 
     // MARK: - Throttle (Intel only)
     private(set) var throttle: ThrottleInfo?
@@ -82,6 +83,20 @@ final class SystemMonitor {
     }
     var showCPUInMenuBar: Bool = UserDefaults.standard.object(forKey: "showCPUInMenuBar") as? Bool ?? false {
         didSet { UserDefaults.standard.set(showCPUInMenuBar, forKey: "showCPUInMenuBar") }
+    }
+    var showMemoryInMenuBar: Bool = UserDefaults.standard.object(forKey: "showMemoryInMenuBar") as? Bool ?? false {
+        didSet { UserDefaults.standard.set(showMemoryInMenuBar, forKey: "showMemoryInMenuBar") }
+    }
+    var showStorageUsedInMenuBar: Bool = UserDefaults.standard.object(forKey: "showStorageUsedInMenuBar") as? Bool ?? false {
+        didSet { UserDefaults.standard.set(showStorageUsedInMenuBar, forKey: "showStorageUsedInMenuBar") }
+    }
+    // swiftlint:disable:next line_length
+    var showStorageAvailableInMenuBar: Bool = UserDefaults.standard.object(forKey: "showStorageAvailableInMenuBar") as? Bool ?? false {
+        didSet { UserDefaults.standard.set(showStorageAvailableInMenuBar, forKey: "showStorageAvailableInMenuBar") }
+    }
+    /// Stack the menu-bar readouts vertically (compact) instead of side by side.
+    var compactMenuBar: Bool = UserDefaults.standard.object(forKey: "compactMenuBar") as? Bool ?? false {
+        didSet { UserDefaults.standard.set(compactMenuBar, forKey: "compactMenuBar") }
     }
 
     /// Poll interval in seconds (1...10). Restarts the timer when changed.
@@ -196,6 +211,7 @@ final class SystemMonitor {
             cpuUsage = usage
         }
         memory = MemoryReader.shared.readMemory()
+        storage = StorageReader.shared.readStorage()
 
         // Intel throttle (no-op on Apple Silicon)
         throttle = ThrottleReader.shared.read()
@@ -311,5 +327,12 @@ enum ByteFormat {
     /// Formats a byte count as GB with one decimal (e.g. "12.4 GB").
     static func gb(_ bytes: UInt64) -> String {
         String(format: "%.1f GB", Double(bytes) / 1_073_741_824)  // 1024^3
+    }
+
+    /// Compact form for the menu bar (e.g. "340G", "1.2T").
+    static func compact(_ bytes: UInt64) -> String {
+        let gb = Double(bytes) / 1_073_741_824
+        if gb >= 1024 { return String(format: "%.1fT", gb / 1024) }
+        return String(format: "%.0fG", gb)
     }
 }

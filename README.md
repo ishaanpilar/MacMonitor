@@ -19,6 +19,25 @@ A lightweight macOS menu-bar app that monitors your Mac's **thermal pressure, CP
 - macOS 15.0+ (Sequoia)
 - Apple Silicon or Intel
 
+## Install
+
+### Homebrew
+
+```bash
+brew install --cask ishaanpilar/tap/macmonitor --no-quarantine
+```
+
+### Download
+
+1. Download the latest `MacMonitor-x.y.z.dmg` from [Releases](https://github.com/ishaanpilar/MacMonitor/releases).
+2. Open it and drag **MacMonitor** to Applications.
+3. The app isn't notarized yet, so remove the quarantine flag once:
+   ```bash
+   xattr -dr com.apple.quarantine /Applications/MacMonitor.app
+   ```
+   (Or right-click the app → **Open** the first time.)
+4. Launch it — the vitals icon appears in your menu bar.
+
 ## Build
 
 Open `MacMonitor.xcodeproj` in Xcode and press ⌘R, or:

@@ -53,6 +53,7 @@ struct MenuContentView: View {
                         .fontWeight(.semibold)
                         .help("Source: \(monitor.temperatureSource ?? "Unknown")")
                 }
+                MenuBarToggle(isOn: $monitor.showTemperatureInMenuBar)
             }
             .font(.headline)
 
@@ -86,7 +87,8 @@ struct MenuContentView: View {
                     label: "CPU",
                     fraction: cpu.total / 100,
                     valueText: "\(Int(cpu.total.rounded()))%",
-                    color: colorForCPU(cpu.total)
+                    color: colorForCPU(cpu.total),
+                    menuBarToggle: $monitor.showCPUInMenuBar
                 )
                 .help("User \(Int(cpu.user.rounded()))% · System \(Int(cpu.system.rounded()))%")
             }
@@ -106,7 +108,8 @@ struct MenuContentView: View {
                     fraction: mem.usedFraction,
                     valueText: "\(ByteFormat.gb(mem.used)) / \(ByteFormat.gb(mem.total))",
                     color: colorForMemory(mem.usedFraction),
-                    badge: mem.pressure.isElevated ? (mem.pressure.displayName, mem.pressure.color) : nil
+                    badge: mem.pressure.isElevated ? (mem.pressure.displayName, mem.pressure.color) : nil,
+                    menuBarToggle: $monitor.showMemoryInMenuBar
                 )
                 .help("Wired \(ByteFormat.gb(mem.wired)) · Compressed \(ByteFormat.gb(mem.compressed))")
 
@@ -123,6 +126,29 @@ struct MenuContentView: View {
                     lineColor: .purple,
                     band: { $0.memoryPressure?.color }
                 )
+            }
+
+            // MARK: Storage
+            Divider()
+            if let storage = monitor.storage {
+                UsageBar(
+                    label: "Storage",
+                    fraction: storage.usedFraction,
+                    valueText: "\(ByteFormat.gb(storage.used)) / \(ByteFormat.gb(storage.total))",
+                    color: colorForMemory(storage.usedFraction),
+                    menuBarToggle: $monitor.showStorageUsedInMenuBar
+                )
+
+                HStack {
+                    Text("Available")
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                    Text(ByteFormat.gb(storage.available))
+                        .foregroundStyle(.secondary)
+                        .monospacedDigit()
+                    MenuBarToggle(isOn: $monitor.showStorageAvailableInMenuBar)
+                }
+                .font(.caption)
             }
 
             // MARK: Statistics
@@ -171,10 +197,13 @@ struct MenuContentView: View {
                 Toggle("Show Memory Graph", isOn: $monitor.showMemoryGraph)
                 Toggle("Average Temperature (vs Hottest)", isOn: $monitor.averageTemperature)
                 Toggle("Fahrenheit", isOn: $monitor.useFahrenheit)
-                Toggle("Show Temperature in Menu Bar", isOn: $monitor.showTemperatureInMenuBar)
-                Toggle("Show CPU in Menu Bar", isOn: $monitor.showCPUInMenuBar)
+                Toggle("Compact Menu Bar (stacked)", isOn: $monitor.compactMenuBar)
             }
             .controlSize(.small)
+
+            Text("Tip: tap the ☑ next to any value to show it in the menu bar.")
+                .font(.system(size: 10))
+                .foregroundStyle(.secondary)
 
             Stepper("Refresh: \(monitor.refreshInterval)s", value: $monitor.refreshInterval, in: 1...10)
                 .controlSize(.small)

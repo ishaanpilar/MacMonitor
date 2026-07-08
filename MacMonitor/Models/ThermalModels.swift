@@ -104,6 +104,17 @@ struct CPUUsage {
     let idle: Double
 }
 
+// MARK: - Storage
+
+/// Boot-volume storage in bytes. "Available" uses the Finder-style important-usage figure.
+struct StorageStats {
+    let total: UInt64
+    let available: UInt64
+
+    var used: UInt64 { total > available ? total - available : 0 }
+    var usedFraction: Double { total > 0 ? Double(used) / Double(total) : 0 }
+}
+
 // MARK: - Throttle (Intel only)
 
 /// Real throttle metrics reported by `pmset -g therm` on Intel Macs.

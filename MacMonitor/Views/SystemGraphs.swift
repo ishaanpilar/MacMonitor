@@ -1,5 +1,23 @@
 import SwiftUI
 
+// MARK: - Menu-bar tick
+
+/// A small checkbox that toggles whether a metric is shown in the menu bar.
+struct MenuBarToggle: View {
+    @Binding var isOn: Bool
+
+    var body: some View {
+        Button {
+            isOn.toggle()
+        } label: {
+            Image(systemName: isOn ? "checkmark.square.fill" : "square")
+                .foregroundStyle(isOn ? Color.accentColor : .secondary)
+        }
+        .buttonStyle(.plain)
+        .help("Show in menu bar")
+    }
+}
+
 // MARK: - Usage bar indicator
 
 /// A compact labelled progress bar (0...1) used for CPU and Memory readouts.
@@ -9,6 +27,7 @@ struct UsageBar: View {
     let valueText: String
     let color: Color
     var badge: (text: String, color: Color)?
+    var menuBarToggle: Binding<Bool>?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 3) {
@@ -28,6 +47,9 @@ struct UsageBar: View {
                     .foregroundStyle(color)
                     .fontWeight(.semibold)
                     .monospacedDigit()
+                if let menuBarToggle {
+                    MenuBarToggle(isOn: menuBarToggle)
+                }
             }
             .font(.subheadline)
 
