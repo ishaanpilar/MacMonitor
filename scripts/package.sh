@@ -28,6 +28,13 @@ xcodebuild \
 APP="$BUILD/Build/Products/Release/$APP_NAME.app"
 [ -d "$APP" ] || { echo "✗ build failed: $APP not found"; exit 1; }
 
+# Building with CODE_SIGNING_ALLOWED=NO leaves an inconsistent signature seal, which makes
+# Gatekeeper report the app as "damaged". Re-sign ad-hoc so the seal is valid; downloaded copies
+# then get the normal "unidentified developer" prompt (right-click → Open) instead.
+echo "▸ Re-signing (ad-hoc)…"
+codesign --force --deep --sign - "$APP"
+codesign --verify --deep --strict "$APP" && echo "  signature valid ✔"
+
 VERSION="$(defaults read "$APP/Contents/Info.plist" CFBundleShortVersionString)"
 echo "▸ Built $APP_NAME $VERSION"
 
