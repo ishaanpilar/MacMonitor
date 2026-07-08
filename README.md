@@ -1,6 +1,10 @@
 # MacMonitor
 
-A lightweight macOS menu-bar app that monitors your Mac's **thermal pressure, CPU usage, and memory** — with live graphs and throttling alerts. No admin privileges, no helper daemon.
+<img src="docs/icon.png" alt="MacMonitor" width="120" align="right">
+
+A lightweight macOS menu-bar app that monitors your Mac's **thermal pressure, CPU usage, memory, and storage** — with live graphs and throttling alerts. No admin privileges, no helper daemon.
+
+<!-- Screenshots live in docs/screenshots/ — add menu.png / graphs.png / sensors.png and they'll render below. -->
 
 ## Features
 
