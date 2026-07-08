@@ -4,7 +4,14 @@
 
 A lightweight macOS menu-bar app that monitors your Mac's **thermal pressure, CPU usage, memory, and storage** — with live graphs and throttling alerts. No admin privileges, no helper daemon.
 
-<!-- Screenshots live in docs/screenshots/ — add menu.png / graphs.png / sensors.png and they'll render below. -->
+<p align="center">
+  <img src="docs/screenshots/menu.png" width="300" alt="Menu bar popover">
+  &nbsp;
+  <img src="docs/screenshots/menu-graphs.png" width="300" alt="Popover with CPU and memory graphs">
+</p>
+<p align="center">
+  <img src="docs/screenshots/graphs.png" width="620" alt="Detachable graphs window">
+</p>
 
 ## Features
 
