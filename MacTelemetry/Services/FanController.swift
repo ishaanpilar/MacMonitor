@@ -6,7 +6,7 @@ import Observation
 /// current release, Intel and Apple Silicon alike — only *reads* are unprivileged, which is why
 /// temperature/fan-speed display always worked but direct control never will.
 ///
-/// The helper (`macmonitor-fan-helper`, built alongside the app — see `Helper/`) is installed
+/// The helper (`mactelemetry-fan-helper`, built alongside the app — see `Helper/`) is installed
 /// once to `/Library/PrivilegedHelperTools`, owned by root with the setuid bit set, via a single
 /// admin-authorization prompt. After that, invoking it needs no further prompts: the OS elevates
 /// automatically because of the setuid bit.
@@ -22,8 +22,8 @@ final class FanController {
     static let minPercentage: Double = 30
     static let maxPercentage: Double = 100
     private static let criticalTemperature: Double = 100
-    private static let helperName = "macmonitor-fan-helper"
-    private static let installPath = "/Library/PrivilegedHelperTools/com.macmonitor.fanhelper"
+    private static let helperName = "mactelemetry-fan-helper"
+    private static let installPath = "/Library/PrivilegedHelperTools/com.mactelemetry.fanhelper"
 
     /// True once we've confirmed the SMC reports at least one controllable fan.
     let isSupported: Bool
@@ -143,7 +143,7 @@ final class FanController {
         // swiftlint:disable:next line_length
         let command = "mkdir -p '\(installDir)' && cp '\(bundled.path)' '\(Self.installPath)' && chown root:wheel '\(Self.installPath)' && chmod 4755 '\(Self.installPath)'"
         // swiftlint:disable:next line_length
-        let script = "do shell script \"\(command)\" with administrator privileges with prompt \"MacMonitor needs one-time permission to control your Mac's fans.\""
+        let script = "do shell script \"\(command)\" with administrator privileges with prompt \"MacTelemetry needs one-time permission to control your Mac's fans.\""
 
         // Neither closure captures `self` — both go through the static singleton — so there's
         // nothing non-Sendable being carried across the queue hop.

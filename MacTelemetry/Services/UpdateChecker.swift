@@ -46,7 +46,7 @@ final class UpdateChecker {
         case failed(String)
     }
 
-    private static let latestReleaseURLString = "https://api.github.com/repos/ishaanpilar/MacMonitor/releases/latest"
+    private static let latestReleaseURLString = "https://api.github.com/repos/ishaanpilar/MacTelemetry/releases/latest"
 
     private(set) var status: Status = .idle
 
@@ -86,7 +86,7 @@ final class UpdateChecker {
 
         var request = URLRequest(url: latestReleaseURL, timeoutInterval: 15)
         request.setValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
-        request.setValue("MacMonitor", forHTTPHeaderField: "User-Agent")
+        request.setValue("MacTelemetry", forHTTPHeaderField: "User-Agent")
 
         let (data, response) = try await URLSession.shared.data(for: request)
 

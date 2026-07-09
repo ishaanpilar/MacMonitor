@@ -11,7 +11,7 @@ struct AboutView: View {
                 .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 24))
                 .cornerRadius(24)
 
-            Text("MacMonitor")
+            Text("MacTelemetry")
                 .font(.title)
                 .fontWeight(.bold)
 
@@ -30,7 +30,7 @@ struct AboutView: View {
 
             updateSection
 
-            if let url = URL(string: "https://github.com/ishaanpilar/MacMonitor") {
+            if let url = URL(string: "https://github.com/ishaanpilar/MacTelemetry") {
                 Link("View on GitHub", destination: url)
                     .font(.caption)
             }

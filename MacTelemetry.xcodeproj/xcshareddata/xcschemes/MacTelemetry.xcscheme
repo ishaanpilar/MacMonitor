@@ -16,9 +16,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "A100000B229E8F1100000001"
-               BuildableName = "MacMonitor.app"
-               BlueprintName = "MacMonitor"
-               ReferencedContainer = "container:MacMonitor.xcodeproj">
+               BuildableName = "MacTelemetry.app"
+               BlueprintName = "MacTelemetry"
+               ReferencedContainer = "container:MacTelemetry.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -45,9 +45,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "A100000B229E8F1100000001"
-            BuildableName = "MacMonitor.app"
-            BlueprintName = "MacMonitor"
-            ReferencedContainer = "container:MacMonitor.xcodeproj">
+            BuildableName = "MacTelemetry.app"
+            BlueprintName = "MacTelemetry"
+            ReferencedContainer = "container:MacTelemetry.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -62,9 +62,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "A100000B229E8F1100000001"
-            BuildableName = "MacMonitor.app"
-            BlueprintName = "MacMonitor"
-            ReferencedContainer = "container:MacMonitor.xcodeproj">
+            BuildableName = "MacTelemetry.app"
+            BlueprintName = "MacTelemetry"
+            ReferencedContainer = "container:MacTelemetry.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

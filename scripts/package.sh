@@ -1,5 +1,5 @@
 #!/bin/bash
-# Builds a Release MacMonitor.app and packages it into a distributable DMG.
+# Builds a Release MacTelemetry.app and packages it into a distributable DMG.
 #
 # This produces an *ad-hoc signed* (i.e. unsigned for distribution) build. Users will need to
 # remove the quarantine attribute on first launch — see the README. To ship a notarized build
@@ -11,7 +11,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 OUT="${1:-$ROOT/dist}"
 BUILD="$ROOT/.build-release"
-APP_NAME="MacMonitor"
+APP_NAME="MacTelemetry"
 
 rm -rf "$BUILD" "$OUT"
 mkdir -p "$OUT"

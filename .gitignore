@@ -15,3 +15,6 @@ release/
 # Release packaging
 dist/
 .build-release/
+
+# Local agent state
+.claude/

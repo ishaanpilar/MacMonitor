@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to MacMonitor are documented here.
+All notable changes to MacTelemetry are documented here.
 
 ## [1.1.1] - 2026-07-09
 

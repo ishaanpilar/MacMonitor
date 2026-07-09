@@ -1,6 +1,6 @@
-# MacMonitor
+# MacTelemetry
 
-<img src="docs/icon.png" alt="MacMonitor" width="120" align="right">
+<img src="docs/icon.png" alt="MacTelemetry" width="120" align="right">
 
 A lightweight macOS menu-bar app that monitors your Mac's **thermal pressure, CPU usage, memory, and storage** — with live graphs and throttling alerts. No admin privileges, no helper daemon.
 
@@ -38,16 +38,16 @@ after installing (this is a one-time step).
 ### Homebrew
 
 ```bash
-brew install --cask ishaanpilar/tap/macmonitor
-xattr -dr com.apple.quarantine /Applications/MacMonitor.app
+brew install --cask ishaanpilar/tap/mactelemetry
+xattr -dr com.apple.quarantine /Applications/MacTelemetry.app
 ```
 
 ### Download
 
-1. Download `MacMonitor-x.y.z.dmg` from [Releases](https://github.com/ishaanpilar/MacMonitor/releases), open it, and drag **MacMonitor** to Applications.
+1. Download `MacTelemetry-x.y.z.dmg` from [Releases](https://github.com/ishaanpilar/MacTelemetry/releases), open it, and drag **MacTelemetry** to Applications.
 2. Clear the quarantine flag once, in Terminal:
    ```bash
-   xattr -dr com.apple.quarantine /Applications/MacMonitor.app
+   xattr -dr com.apple.quarantine /Applications/MacTelemetry.app
    ```
    **Or** without Terminal: double-click the app, dismiss the "could not verify" prompt, then open
    **System Settings → Privacy & Security**, scroll to *Security*, and click **Open Anyway**.
@@ -58,10 +58,10 @@ xattr -dr com.apple.quarantine /Applications/MacMonitor.app
 
 ## Build
 
-Open `MacMonitor.xcodeproj` in Xcode and press ⌘R, or:
+Open `MacTelemetry.xcodeproj` in Xcode and press ⌘R, or:
 
 ```bash
-xcodebuild -project MacMonitor.xcodeproj -scheme MacMonitor -configuration Release build
+xcodebuild -project MacTelemetry.xcodeproj -scheme MacTelemetry -configuration Release build
 ```
 
 ## How it works

@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct MacMonitorApp: App {
+struct MacTelemetryApp: App {
     @State private var monitor = SystemMonitor()
 
     var body: some Scene {
@@ -12,7 +12,7 @@ struct MacMonitorApp: App {
         }
         .menuBarExtraStyle(.window)
 
-        Window("About MacMonitor", id: "about") {
+        Window("About MacTelemetry", id: "about") {
             AboutView()
         }
         .windowResizability(.contentSize)
