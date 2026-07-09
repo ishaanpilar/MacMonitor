@@ -51,6 +51,7 @@
 		A1000038229E8F1100000001 /* SensorsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorsView.swift; sourceTree = "<group>"; };
 		A100003A229E8F1100000001 /* StorageReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageReader.swift; sourceTree = "<group>"; };
 		A100003C229E8F1100000001 /* FanController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FanController.swift; sourceTree = "<group>"; };
+		A1000040229E8F1100000001 /* macmonitor-fan-helper.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "macmonitor-fan-helper.c"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +80,7 @@
 				A1000025229E8F1100000001 /* Models */,
 				A1000026229E8F1100000001 /* Views */,
 				A1000027229E8F1100000001 /* Services */,
+				A100003F229E8F1100000001 /* Helper */,
 				A1000016229E8F1100000001 /* Assets.xcassets */,
 				A1000006229E8F1100000001 /* Info.plist */,
 				A100002A229E8F1100000001 /* MacMonitor.entitlements */,
@@ -132,6 +134,14 @@
 			path = Services;
 			sourceTree = "<group>";
 		};
+		A100003F229E8F1100000001 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				A1000040229E8F1100000001 /* macmonitor-fan-helper.c */,
+			);
+			path = Helper;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -142,6 +152,7 @@
 				A100000D229E8F1100000001 /* Sources */,
 				A1000007229E8F1100000001 /* Frameworks */,
 				A100000E229E8F1100000001 /* Resources */,
+				A100003E229E8F1100000001 /* Build Fan Helper */,
 			);
 			buildRules = (
 			);
@@ -195,6 +206,25 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		A100003E229E8F1100000001 /* Build Fan Helper */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/MacMonitor/Helper/macmonitor-fan-helper.c",
+			);
+			name = "Build Fan Helper";
+			outputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/$(CONTENTS_FOLDER_PATH)/Resources/macmonitor-fan-helper",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\nmkdir -p \"$BUILT_PRODUCTS_DIR/$CONTENTS_FOLDER_PATH/Resources\"\nclang -O2 -framework IOKit -framework CoreFoundation -o \"$BUILT_PRODUCTS_DIR/$CONTENTS_FOLDER_PATH/Resources/macmonitor-fan-helper\" \"$SRCROOT/MacMonitor/Helper/macmonitor-fan-helper.c\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		A100000D229E8F1100000001 /* Sources */ = {

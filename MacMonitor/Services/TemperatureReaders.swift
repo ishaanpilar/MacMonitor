@@ -305,24 +305,6 @@ final class SMCReader {
         return (minRPM, maxRPM)
     }
 
-    /// Forces a fan to spin at the given target RPM ("F{n}Tg"). Only takes effect while manual
-    /// control is enabled via `setManualFanControl` — otherwise macOS's automatic thermal
-    /// controller ignores or silently overwrites it within a few seconds.
-    @discardableResult
-    func writeFanTargetRPM(fan: Int, rpm: Double) -> Bool {
-        guard isConnected else { return false }
-        return writeValue(key: "F\(fan)Tg", doubleValue: rpm)
-    }
-
-    /// Toggles manual fan control system-wide via the "FS! " bitmask key (one bit per fan).
-    /// Disabling restores macOS's automatic, thermal-driven fan curve.
-    @discardableResult
-    func setManualFanControl(enabled: Bool, fanCount: Int) -> Bool {
-        guard isConnected, fanCount > 0 else { return false }
-        let mask: UInt16 = enabled ? UInt16((1 << fanCount) - 1) : 0
-        return writeBitmask(key: "FS! ", value: mask)
-    }
-
     private func getFanCount() -> Int {
         if let cached = cachedFanCount {
             return cached
@@ -426,55 +408,6 @@ final class SMCReader {
     private func readTemperature(key: String) -> Double? {
         guard let value = readTemperatureRaw(key: key) else { return nil }
         return value > 20 && value < 150 ? value : nil
-    }
-
-    /// Writes a value to an SMC key (kSMCWriteKey), auto-detecting fpe2 (2-byte fixed point,
-    /// Intel) vs flt (4-byte float, Apple Silicon) from kSMCReadKeyInfo — the same convention
-    /// `readFloat` decodes on the way in.
-    private func writeValue(key: String, doubleValue: Double) -> Bool {
-        var input = SMCKeyData()
-        var output = SMCKeyData()
-
-        input.key = FourCharCode(fromString: key)
-        input.data8 = 9 // kSMCReadKeyInfo
-        guard call(input: &input, output: &output) == kIOReturnSuccess else { return false }
-
-        let dataSize = output.keyInfo.dataSize
-        input.keyInfo.dataSize = dataSize
-
-        switch dataSize {
-        case 4:
-            let bits = Float(doubleValue).bitPattern
-            input.bytes.0 = UInt8(bits & 0xFF)
-            input.bytes.1 = UInt8((bits >> 8) & 0xFF)
-            input.bytes.2 = UInt8((bits >> 16) & 0xFF)
-            input.bytes.3 = UInt8((bits >> 24) & 0xFF)
-        case 2:
-            let fixed = UInt16(clamping: Int((doubleValue * 4).rounded()))
-            input.bytes.0 = UInt8((fixed >> 8) & 0xFF)
-            input.bytes.1 = UInt8(fixed & 0xFF)
-        default:
-            return false
-        }
-
-        input.data8 = 6 // kSMCWriteKey
-        return call(input: &input, output: &output) == kIOReturnSuccess
-    }
-
-    /// Writes a raw big-endian 16-bit bitmask (used for "FS! ", the manual-fan-control bit field).
-    private func writeBitmask(key: String, value: UInt16) -> Bool {
-        var input = SMCKeyData()
-        var output = SMCKeyData()
-
-        input.key = FourCharCode(fromString: key)
-        input.data8 = 9 // kSMCReadKeyInfo
-        guard call(input: &input, output: &output) == kIOReturnSuccess else { return false }
-
-        input.keyInfo.dataSize = output.keyInfo.dataSize
-        input.bytes.0 = UInt8((value >> 8) & 0xFF)
-        input.bytes.1 = UInt8(value & 0xFF)
-        input.data8 = 6 // kSMCWriteKey
-        return call(input: &input, output: &output) == kIOReturnSuccess
     }
 
     private func call(input: inout SMCKeyData, output: inout SMCKeyData) -> kern_return_t {

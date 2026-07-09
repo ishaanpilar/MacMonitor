@@ -113,11 +113,34 @@ struct MenuContentView: View {
                             .monospacedDigit()
                             .frame(width: 34, alignment: .trailing)
                     }
-                    // swiftlint:disable:next line_length
-                    Text("Forces fans to at least this speed. Jumps to 100% automatically if temperatures get critical, and reverts to Auto on quit.")
-                        .font(.system(size: 10))
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
+                    .disabled(!FanController.shared.isAuthorized)
+
+                    if FanController.shared.isRequestingAuthorization {
+                        Label("Waiting for administrator approval…", systemImage: "lock")
+                            .font(.system(size: 10))
+                            .foregroundStyle(.secondary)
+                    } else if let error = FanController.shared.authorizationError {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Label(error, systemImage: "exclamationmark.triangle.fill")
+                                .font(.system(size: 10))
+                                .foregroundStyle(.orange)
+                            Button("Grant Permission") {
+                                FanController.shared.retryAuthorization()
+                            }
+                            .controlSize(.mini)
+                        }
+                    } else if !FanController.shared.isAuthorized {
+                        // swiftlint:disable:next line_length
+                        Text("Requires one-time administrator approval to install a fan-control helper.")
+                            .font(.system(size: 10))
+                            .foregroundStyle(.secondary)
+                    } else {
+                        // swiftlint:disable:next line_length
+                        Text("Forces fans to at least this speed. Jumps to 100% automatically if temperatures get critical, and reverts to Auto on quit.")
+                            .font(.system(size: 10))
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
                 }
             }
             .controlSize(.small)
