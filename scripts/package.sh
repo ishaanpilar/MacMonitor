@@ -17,13 +17,18 @@ rm -rf "$BUILD" "$OUT"
 mkdir -p "$OUT"
 
 echo "▸ Building Release…"
-xcodebuild \
+BUILD_LOG="$(mktemp)"
+if ! xcodebuild \
   -project "$ROOT/$APP_NAME.xcodeproj" \
   -scheme "$APP_NAME" \
   -configuration Release \
   -derivedDataPath "$BUILD" \
   CODE_SIGNING_ALLOWED=NO \
-  build >/dev/null
+  build >"$BUILD_LOG" 2>&1; then
+  echo "✗ xcodebuild failed:"
+  cat "$BUILD_LOG"
+  exit 1
+fi
 
 APP="$BUILD/Build/Products/Release/$APP_NAME.app"
 [ -d "$APP" ] || { echo "✗ build failed: $APP not found"; exit 1; }
